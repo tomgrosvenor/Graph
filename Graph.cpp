@@ -65,6 +65,7 @@ class Graph {
                              const int    max_weight    = DEFAULT_MAX_WGT) {
 
             // Before creating the edges, make sure all edge containers are empty.
+            //
             for (auto& [node, edges] : *graph) {
                 if (!edges->empty()) {
                     delete edges;
@@ -83,6 +84,7 @@ class Graph {
             srand (time(0));
 
             // Add random edges (and weights) to the graph.
+            //
             while (edge_cnt < num_edges) {
 
                 // Set indexes to two randomly selected nodes.
@@ -103,6 +105,7 @@ class Graph {
 
                 // Add the edge to the 'to_node' to the 'from_node'.
                 // Give this edge a random weight.
+                //
                 graph->at(from_node)->insert (make_pair (to_node, rand() % max_weight + 1));
             
                 edge_cnt++;
