@@ -82,9 +82,6 @@ class Graph {
             // Seed random number generator.
             srand (time(0));
 
-                    cout << "    Density of 1: " << num_nodes * (num_nodes - 1) << " edges - tbg" << endl;
-                    cout << "    Density of " << graph_density << ": " << num_edges << " edges - tbg" << endl;
-
             // Add random edges (and weights) to the graph.
             while (edge_cnt < num_edges) {
 
@@ -103,8 +100,6 @@ class Graph {
                 // have an edge to the 'to_node.
                 //
                 if (graph->at(from_node)->contains(to_node)) continue;
-
-                        cout << " tbg - from: " << from_node << ", to: " << to_node << endl;
 
                 // Add the edge to the 'to_node' to the 'from_node'.
                 // Give this edge a random weight.
