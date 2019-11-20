@@ -10,6 +10,7 @@ int main() {
     Graph graph2 { };
     Graph graph3;
     Graph graph4 { "four" };
+    Graph dg     { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
 
     cout << "graph1 size = " << graph1.size() << endl;
     cout << "graph2 size = " << graph2.size() << endl;
@@ -38,4 +39,8 @@ int main() {
 
     cout << "With density 0.35 (graph1) (using <<):" << endl;
     cout << graph1 << "okay" << 4 << "\n" << graph4 << endl;
+
+    dg.create_density();
+    cout << "With default density: (dg)" << endl;
+    cout << dg << endl;
 }

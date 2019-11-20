@@ -25,11 +25,10 @@ Graph::Graph (const initializer_list <string>& lst)
     :graph { new unordered_map <string, unordered_map<string, int>* > },
      node_names { new vector <string> {lst} }
 {
-    // Add the names in the 'lst' to this graph. The names in the 'lst'
-    // become the names of the nodes in this graph. Create and associate
+    // Add the node names (node_names) to this graph. Create and associate
     // an empty map for each node before inserting into the graph.
     //
-    for (const auto& node_name : lst) {
+    for (const auto& node_name : *node_names) {
         graph->insert (make_pair (node_name, new unordered_map<string, int>));
     }
 
