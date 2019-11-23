@@ -128,10 +128,18 @@ string Graph::to_string() const {
 }
 
 
+// Given a node name that's in this graph, return a pointer to a vector that contains
+// all the nodes that are reachable from this given node along with the cost associated
+// with traversal to a reachable node.
+//
 unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& node_name) const {
 
     unique_ptr< vector<reachable_node> > vec { new vector<reachable_node> };
 
+    // If the named node is in this graph, add all its 
+    // reachable nodes and the cost of traversal to that
+    // node.
+    //
     if (graph->contains(node_name)) {
         for (auto& [name, cost] : *graph->at(node_name)) {
             reachable_node rnode {name, cost};
@@ -139,6 +147,7 @@ unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& n
         }
     }
 
+    // Return the pointer to the 'reachable' nodes.
     return vec;
 }
 

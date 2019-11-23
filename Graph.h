@@ -12,11 +12,19 @@ using namespace std;
 constexpr double DEFAULT_DENSITY { 0.20 };
 constexpr int    DEFAULT_MAX_WGT { 10 };
 
+// Information about a reachable node. There is a directed
+// edge from a node to the node named in this structure. The
+// 'cost' of traversing to this named node is 'cost_to_node'.
+//
 struct reachable_node {
     string  node_name;
     int     cost_to_node;
 };
 
+// A class that respresents a graph. This class contains a
+// graph's nodes and a random number of directed edges. Each
+// edge has a random weight/cost associated with it.
+//
 class Graph {
     public:
         Graph ();
@@ -33,4 +41,6 @@ class Graph {
         unsigned int                                          num_nodes;
 };
 
+// Overload the output operatator for the Graph class.
+//
 ostream& operator<< (ostream&, const Graph&);
