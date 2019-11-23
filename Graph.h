@@ -28,7 +28,7 @@ struct reachable_node {
 class Graph {
     public:
         Graph ();
-        Graph (const initializer_list <string>&);
+        explicit Graph (const initializer_list <string>&);
         ~Graph ();
         void create_density (const double graph_density = DEFAULT_DENSITY,
                              const int    max_weight    = DEFAULT_MAX_WGT);

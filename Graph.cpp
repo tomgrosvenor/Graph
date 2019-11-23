@@ -142,8 +142,7 @@ unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& n
     //
     if (graph->contains(node_name)) {
         for (auto& [name, cost] : *graph->at(node_name)) {
-            reachable_node rnode {name, cost};
-            vec->emplace_back(rnode);
+            vec->push_back( {name, cost} );
         }
     }
 
