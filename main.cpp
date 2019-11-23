@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <memory>
+
 #include "Graph.h"
 
 using namespace std;
@@ -10,7 +12,7 @@ int main() {
     Graph graph2 { };
     Graph graph3;
     Graph graph4 { "four" };
-    Graph dg     { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+    Graph dg     { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
 
     cout << "graph1 size = " << graph1.size() << endl;
     cout << "graph2 size = " << graph2.size() << endl;
@@ -40,7 +42,12 @@ int main() {
     cout << "With density 0.35 (graph1) (using <<):" << endl;
     cout << graph1 << "okay" << 4 << "\n" << graph4 << endl;
 
-    dg.create_density();
-    cout << "With default density: (dg)" << endl;
+    dg.create_density(0.35);
+    cout << "With density of 35%: (dg)" << endl;
     cout << dg << endl;
+
+    unique_ptr< vector<reachable_node> > tn = dg.get_reachable_nodes ("g");
+    for (auto& [name, cost] : *tn) {
+        cout << "name: " << name << ", cost: " << cost << endl; // tbg
+    }
 }

@@ -1,8 +1,4 @@
 
-#include <iostream>
-#include <unordered_map>
-#include <vector>
-
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -129,6 +125,21 @@ string Graph::to_string() const {
         retStr.replace(retStr.size() - 4, 4, "\n");
     }
     return retStr;
+}
+
+
+unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& node_name) const {
+
+    unique_ptr< vector<reachable_node> > vec { new vector<reachable_node> };
+
+    if (graph->contains(node_name)) {
+        for (auto& [name, cost] : *graph->at(node_name)) {
+            reachable_node rnode {name, cost};
+            vec->emplace_back(rnode);
+        }
+    }
+
+    return vec;
 }
 
 
