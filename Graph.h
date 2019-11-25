@@ -29,15 +29,22 @@ class Graph {
     public:
         Graph ();
         explicit Graph (const initializer_list <string>&);
+        Graph (const Graph&);
+        Graph (Graph&&);
+/* tbg
+        Graph& operator= (const Graph&);
+        Graph& operator= (Graph&&);
+tbg */
         ~Graph ();
+
         void create_density (const double graph_density = DEFAULT_DENSITY,
                              const int    max_weight    = DEFAULT_MAX_WGT);
         unsigned int size() const;
         string to_string() const;
         unique_ptr< vector<reachable_node> > get_reachable_nodes (const string&) const;
     private:
-        unordered_map <string, unordered_map<string, int>* >* graph;
-        const vector<string>*                                 node_names;
+        unordered_map <string, unordered_map<string, int>* > *graph;
+        const vector<string>                                 *node_names;
         unsigned int                                          num_nodes;
 };
 

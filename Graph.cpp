@@ -33,6 +33,43 @@ Graph::Graph (const initializer_list <string>& lst)
 }
 
 
+Graph::Graph (const Graph& graph_to_copy)
+    :graph { new unordered_map <string, unordered_map<string, int>* > },
+     node_names { new vector <string> { *graph_to_copy.node_names } },
+     num_nodes { graph_to_copy.num_nodes }
+{
+    for (const auto& [node_name, edges] : *graph_to_copy.graph) {
+        graph->insert (make_pair (node_name, new unordered_map<string, int>));
+        for (const auto& [to_node, weight] : *edges) {
+            graph->at(node_name)->insert (make_pair (to_node, weight));
+        }
+    }
+}
+
+
+Graph::Graph (Graph&& graph_to_move)
+    :graph { graph_to_move.graph },
+     node_names { graph_to_move.node_names },
+     num_nodes { graph_to_move.num_nodes }
+{
+    graph_to_move.graph = nullptr;
+    graph_to_move.node_names = nullptr;
+    graph_to_move.num_nodes = 0;
+}
+
+/* tbg
+
+Graph::Graph& operator= (const Graph& g)
+{
+}
+
+
+Graph::Graph& operator= (Graph&& g) {
+}
+
+tbg */
+
+
 Graph::~Graph () {
 
     // Free the memory associated with the vector;
