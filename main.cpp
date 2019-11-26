@@ -19,50 +19,34 @@ struct traverse_info {
 
 int main() {
 
-    Graph graph1 {"zero", "one", "two", "three", "ohmy", "four", "five", "six", "ohno", "seven", "eight", "nine"};
-    Graph graph2 { };
-    Graph graph3;
-    Graph graph4 { "four" };
-    Graph dg     { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
+    Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
 
-    cout << "graph1 size = " << graph1.size() << endl;
-    cout << "graph2 size = " << graph2.size() << endl;
-    cout << "graph3 size = " << graph3.size() << endl;
-    cout << "graph4 size = " << graph4.size() << endl;
+    cout << "dg size = " << dg.size() << endl;
 
-/* tbg
-
-    // Create default density for each graph.
-    graph1.create_density();
-
-    cout << "With default density (graph1):" << endl;
-    cout << graph1 << endl;
-
-    graph2.create_density();
-
-    cout << "With default density: (graph2)" << endl;
-    cout << graph2 << endl;
-
-    graph3.create_density();
-    graph4.create_density();
-
-    // Create a density of 35% for graph1.
-    graph1.create_density(0.35);
-
-    cout << "With density 0.35 (graph1):" << endl;
-    cout << graph1.to_string() << endl;
-
-    cout << "With density 0.35 (graph1) (using <<):" << endl;
-    cout << graph1 << "okay" << 4 << "\n" << graph4 << endl;
-
-tbg */
-
+    // Create random edges & weights for 'dg'.
+    //
     dg.create_density(0.35);
+
+    // Print 'dg'.
     cout << "With density of 35%: (dg)" << endl;
     cout << dg << endl;
 
+    // Copy dg using the copy constructor and print 'dgc'.
+    Graph dgc { dg };
+    cout << "dgc size = " << dgc.size() << endl;
+    cout << "Print: (dgc)" << endl;
+    cout << dgc << endl;
 
+    // Assign dg using the copy assignment and print 'dgc2'.
+    Graph dgc2;
+    dgc2 = dgc;
+    cout << "dgc2 size = " << dgc2.size() << endl;
+    cout << "Print: (dgc2)" << endl;
+    cout << dgc2 << endl;
 
+    // Create an open & closed 'list' for implementing
+    //  Dijkstra's algorithm.
+    //
     unordered_map <string, pair <string, int> > closed;
     vector <traverse_info>                      open;
 
@@ -137,4 +121,5 @@ tbg */
     // Remove the last element
     //
     open.pop_back();
+
 }

@@ -33,12 +33,12 @@ Graph::Graph (const initializer_list <string>& lst)
 }
 
 
-Graph::Graph (const Graph& graph_to_copy)
+Graph::Graph (const Graph& copyGraph)
     :graph { new unordered_map <string, unordered_map<string, int>* > },
-     node_names { new vector <string> { *graph_to_copy.node_names } },
-     num_nodes { graph_to_copy.num_nodes }
+     node_names { new vector <string> { *(copyGraph.node_names) } },
+     num_nodes { copyGraph.num_nodes }
 {
-    for (const auto& [node_name, edges] : *graph_to_copy.graph) {
+    for (const auto& [node_name, edges] : *(copyGraph.graph)) {
         graph->insert (make_pair (node_name, new unordered_map<string, int>));
         for (const auto& [to_node, weight] : *edges) {
             graph->at(node_name)->insert (make_pair (to_node, weight));
@@ -47,32 +47,67 @@ Graph::Graph (const Graph& graph_to_copy)
 }
 
 
-Graph::Graph (Graph&& graph_to_move)
-    :graph { graph_to_move.graph },
-     node_names { graph_to_move.node_names },
-     num_nodes { graph_to_move.num_nodes }
+Graph::Graph (Graph&& moveGraph)
+    :graph { moveGraph.graph },
+     node_names { moveGraph.node_names },
+     num_nodes { moveGraph.num_nodes }
 {
-    graph_to_move.graph = nullptr;
-    graph_to_move.node_names = nullptr;
-    graph_to_move.num_nodes = 0;
+    moveGraph.graph = new unordered_map <string, unordered_map<string, int>* >;
+    moveGraph.node_names = new vector <string>;
+    moveGraph.num_nodes = 0;
+
+}
+
+
+Graph& Graph::operator= (const Graph& copyGraph)
+{
+    // Before assigning the 'new' values (from copyGraph) to the member
+    // variables, free the memory associated with the 'current' values.
+    //
+    delete node_names;
+
+    // Free the memory for each value (edges) associated with each key (node).
+    //
+    for (auto& [node, edges] : *graph) {
+        delete edges;
+    }
+
+    // Free the memory associated with this graph.
+    //
+    delete graph;
+
+    // Assign the 'new' values from copyGraph to this Graph.
+    //
+    graph = new unordered_map <string, unordered_map<string, int>* >;
+    node_names = new vector <string> { *(copyGraph.node_names) };
+    num_nodes = copyGraph.num_nodes;
+
+    for (const auto& [node_name, edges] : *(copyGraph.graph)) {
+        graph->insert (make_pair (node_name, new unordered_map<string, int> { *edges } ));
+/* tbg
+        for (const auto& [to_node, weight] : *edges) {
+            graph->at(node_name)->insert (make_pair (to_node, weight));
+        }
+tbg */
+    }
+
+    // Return this Graph.
+    //
+    return *this;
 }
 
 /* tbg
 
-Graph::Graph& operator= (const Graph& g)
+Graph& Graph::operator= (Graph&& g)
 {
-}
-
-
-Graph::Graph& operator= (Graph&& g) {
 }
 
 tbg */
 
 
-Graph::~Graph () {
-
-    // Free the memory associated with the vector;
+Graph::~Graph ()
+{
+    // Free the memory associated with the vector.
     delete node_names;
 
     // Free the memory for each value (edges) associated with each key (node).
@@ -143,16 +178,16 @@ void Graph::create_density (const double graph_density,
 
 // Return the number of nodes this Graph has.
 //
-unsigned int Graph::size() const {
-
+unsigned int Graph::size() const
+{
     return num_nodes;
 }
 
 
 // Returns a string representation of this Graph.
 //
-string Graph::to_string() const {
-
+string Graph::to_string() const
+{
     string retStr = "";
     for (auto& [node, edges] : *graph) {
         retStr += "Node: " + node + " -> ";
@@ -169,8 +204,8 @@ string Graph::to_string() const {
 // all the nodes that are reachable from this given node along with the cost associated
 // with traversal to a reachable node.
 //
-unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& node_name) const {
-
+unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& node_name) const
+{
     unique_ptr< vector<reachable_node> > vec { new vector<reachable_node> };
 
     // If the named node is in this graph, add all its 
@@ -190,8 +225,8 @@ unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& n
 
 // Overload the '<<' operator so it can be used with a Graph.
 //
-ostream& operator<< (ostream& os, const Graph& g) {
-
+ostream& operator<< (ostream& os, const Graph& g)
+{
     return os << g.to_string();
 }
 

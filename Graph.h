@@ -31,8 +31,8 @@ class Graph {
         explicit Graph (const initializer_list <string>&);
         Graph (const Graph&);
         Graph (Graph&&);
-/* tbg
         Graph& operator= (const Graph&);
+/* tbg
         Graph& operator= (Graph&&);
 tbg */
         ~Graph ();
