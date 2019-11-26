@@ -21,10 +21,10 @@ Graph::Graph (const initializer_list <string>& lst)
     :graph { new unordered_map <string, unordered_map<string, int>* > },
      node_names { new vector <string> {lst} }
 {
-    // Add the node names (node_names) to this graph. Create and associate
+    // Add the node names (lst) to this graph. Create and associate
     // an empty map for each node before inserting into the graph.
     //
-    for (const auto& node_name : *node_names) {
+    for (const auto& node_name : lst) {
         graph->insert (make_pair (node_name, new unordered_map<string, int>));
     }
 
@@ -39,10 +39,7 @@ Graph::Graph (const Graph& copyGraph)
      num_nodes { copyGraph.num_nodes }
 {
     for (const auto& [node_name, edges] : *(copyGraph.graph)) {
-        graph->insert (make_pair (node_name, new unordered_map<string, int>));
-        for (const auto& [to_node, weight] : *edges) {
-            graph->at(node_name)->insert (make_pair (to_node, weight));
-        }
+        graph->insert (make_pair ( node_name, new unordered_map<string, int> { *edges } ));
     }
 }
 
@@ -55,7 +52,6 @@ Graph::Graph (Graph&& moveGraph)
     moveGraph.graph = new unordered_map <string, unordered_map<string, int>* >;
     moveGraph.node_names = new vector <string>;
     moveGraph.num_nodes = 0;
-
 }
 
 
@@ -64,17 +60,11 @@ Graph& Graph::operator= (const Graph& copyGraph)
     // Before assigning the 'new' values (from copyGraph) to the member
     // variables, free the memory associated with the 'current' values.
     //
-    delete node_names;
-
-    // Free the memory for each value (edges) associated with each key (node).
-    //
     for (auto& [node, edges] : *graph) {
         delete edges;
     }
-
-    // Free the memory associated with this graph.
-    //
     delete graph;
+    delete node_names;
 
     // Assign the 'new' values from copyGraph to this Graph.
     //
@@ -83,12 +73,7 @@ Graph& Graph::operator= (const Graph& copyGraph)
     num_nodes = copyGraph.num_nodes;
 
     for (const auto& [node_name, edges] : *(copyGraph.graph)) {
-        graph->insert (make_pair (node_name, new unordered_map<string, int> { *edges } ));
-/* tbg
-        for (const auto& [to_node, weight] : *edges) {
-            graph->at(node_name)->insert (make_pair (to_node, weight));
-        }
-tbg */
+        graph->insert (make_pair ( node_name, new unordered_map<string, int> { *edges } ));
     }
 
     // Return this Graph.
@@ -96,13 +81,32 @@ tbg */
     return *this;
 }
 
-/* tbg
 
-Graph& Graph::operator= (Graph&& g)
+Graph& Graph::operator= (Graph&& moveGraph)
 {
-}
+    // Before assigning the 'new' values (from moveGraph) to the member
+    // variables, free the memory associated with the 'current' values.
+    //
+    for (auto& [node, edges] : *graph) {
+        delete edges;
+    }
+    delete graph;
+    delete node_names;
 
-tbg */
+    // Assign the 'new' values from moveGraph to this Graph.
+    //
+    graph = moveGraph.graph;
+    node_names = moveGraph.node_names;
+    num_nodes = moveGraph.num_nodes;
+
+    moveGraph.graph = new unordered_map <string, unordered_map<string, int>* >;
+    moveGraph.node_names = new vector <string>;
+    moveGraph.num_nodes = 0;
+
+    // Return this Graph.
+    //
+    return *this;
+}
 
 
 Graph::~Graph ()

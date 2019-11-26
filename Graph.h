@@ -22,8 +22,9 @@ struct reachable_node {
 };
 
 // A class that respresents a graph. This class contains a
-// graph's nodes and a random number of directed edges. Each
-// edge has a random weight/cost associated with it.
+// graph's nodes. A call to create_density() creates a random
+// number of directed edges. Each edge has a random weight/cost
+// associated with it.
 //
 class Graph {
     public:
@@ -32,9 +33,7 @@ class Graph {
         Graph (const Graph&);
         Graph (Graph&&);
         Graph& operator= (const Graph&);
-/* tbg
         Graph& operator= (Graph&&);
-tbg */
         ~Graph ();
 
         void create_density (const double graph_density = DEFAULT_DENSITY,
