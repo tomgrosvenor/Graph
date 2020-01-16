@@ -10,10 +10,9 @@ using namespace std;
 
 Graph::Graph ()
     :graph { new unordered_map <string, unordered_map<string, int>* > },
-     node_names { new vector <string> }
+     node_names { new vector <string> },
+     num_nodes { 0 }
 {
-    // Set how many nodes are in this graph.
-    num_nodes = graph->size();
 }
 
 
