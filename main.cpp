@@ -19,16 +19,19 @@ struct traverse_info {
 
 int main() {
 
-    Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
+    string input;
+
+    // tbg Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
+    Graph dg { "a", "b", "c", "d" };
 
     cout << "dg size = " << dg.size() << endl;
 
     // Create random edges & weights for 'dg'.
     //
-    dg.create_density(0.35);
+    dg.create_density(0.5);
 
     // Print 'dg'.
-    cout << "With density of 35%: (dg)" << endl;
+    cout << "With density of 50%: (dg)" << endl;
     cout << dg << endl;
 
     // Copy dg using the copy constructor and print 'dgc'.
@@ -36,20 +39,35 @@ int main() {
     cout << "dgc size = " << dgc.size() << endl;
     cout << "Print: (dgc)" << endl;
     cout << dgc << endl;
+      cout << "Pause for randomness ... "s;
+      cin >> input;
+
+      dg.create_density(0.25);
+      cout << "With density of 25%: (dg)" << endl;
+      cout << dg << endl;
+        cout << "Print: (dgc)" << endl;
+        cout << dgc << endl;
 
     // Assign dg using the copy assignment and print 'dgc2'.
     Graph dgc2;
     dgc2 = dgc;
+      cout << "Pause for randomness ... "s;
+      cin >> input;
+      dgc.create_density(0.15);
     cout << "dgc2 size = " << dgc2.size() << endl;
     cout << "Print: (dgc2)" << endl;
     cout << dgc2 << endl;
+      cout << "With density of 15%: (dgc)" << endl;
+      cout << dgc << endl;
+        cout << "Print: (dgc2)" << endl;
+        cout << dgc2 << endl;
 
+/* tbg
     // Create an open & closed 'list' for implementing
     //  Dijkstra's algorithm.
     //
     unordered_map <string, pair <string, int> > closed;
     vector <traverse_info>                      open;
-
 
     // Get the nodes/costs reachable from node 'g'
     unique_ptr< vector<reachable_node> > rn = dg.get_reachable_nodes ("g");
@@ -86,6 +104,7 @@ int main() {
         cout << "from: " << from << ", to node: " << node << ", cost: " << cost << endl;
     }
 
+
     // Get the last element
     //
     traverse_info ti = open.back();
@@ -121,5 +140,7 @@ int main() {
     // Remove the last element
     //
     open.pop_back();
+
+tbg */
 
 }
