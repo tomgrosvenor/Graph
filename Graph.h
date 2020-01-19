@@ -41,6 +41,7 @@ class Graph {
         unsigned int size() const;
         string to_string() const;
         unique_ptr< vector<reachable_node> > get_reachable_nodes (const string&) const;
+        bool contains(const string&) const;
     private:
         unordered_map <string, unordered_map<string, int>* > *graph;
         const vector<string>                                 *node_names;

@@ -187,6 +187,14 @@ unsigned int Graph::size() const
 }
 
 
+// Indicate whether this Graph contain a given node.
+//
+bool Graph::contains (const string& node_name) const
+{
+    return graph->contains(node_name);
+}
+
+
 // Returns a string representation of this Graph.
 //
 string Graph::to_string() const

@@ -13,7 +13,6 @@ struct traverse_info {
 
     bool operator< (const traverse_info& rhs) {
         return accum_cost < rhs.accum_cost;
-        // tbg return rhs.accum_cost < accum_cost;
     }
 };
 
@@ -68,27 +67,42 @@ tbg */
     // Create an open & a closed 'list' for implementing
     //  Dijkstra's algorithm.
     //
-    unordered_map <string, pair <string, int> > closed;
-    vector <traverse_info>                      open;
+    unordered_map <string, traverse_info> closed;
+    vector <traverse_info>                open;
 
     // Ask the user to enter a start node.
     cout << "Please enter a starting node: "s;
     cin >> start_node;
 
+    // Make sure the user entered a start_node that's in the graph.
+    if (!dg.contains(start_node)) {
+        cout << "The start node entered is not in the graph: "s << start_node << endl;
+        return 1;
+    }
+
     // Ask the user to enter an end node.
     cout << "Please enter an end node: "s;
     cin >> end_node;
 
-    // Get the nodes/costs reachable from the start node.
+    // Make sure the user entered a end_node that's in the graph.
+    if (!dg.contains(end_node)) {
+        cout << "The end node entered is not in the graph: "s << end_node << endl;
+        return 1;
+    }
+
+    // Add the start_node to the 'closed' list.
+    //
+    closed.insert( {start_node, {start_node, start_node, 0}} );
+
+    // Get the nodes/costs reachable from the start_node.
     unique_ptr< vector<reachable_node> > rn = dg.get_reachable_nodes (start_node);
 
-    // Add the reachable nodes to the 'open list' if they are
-    // not already in the 'closed list'.
+    // Add nodes reachable from the start_node to the 'open list'
+    // if they are not already in the 'closed list'.
     //
     for (auto& [name, cost] : *rn) {
             cout << "name: " << name << ", cost: " << cost << endl; // tbg
         if (!closed.contains(name)) {
-            // tbg open.push_back( {"g", name, cost} );
             open.push_back( {start_node, name, cost} );
         }
     }
