@@ -8,20 +8,21 @@ using namespace std;
 
 struct traverse_info {
     string  from_node;
-    string  node;
-    int     accum_cost;
+    string  node_id;
+    int     total_cost;
 
     bool operator< (const traverse_info& rhs) {
-        return accum_cost < rhs.accum_cost;
+        return total_cost < rhs.total_cost;
     }
 };
 
 
 int main() {
 
-    string input, start_node, end_node;
+    string input, cur_node, end_node;
 
-    Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
+    // tbg Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
+    Graph dg { "a", "b", "c", "d", "e" };
 
     cout << "dg size = " << dg.size() << endl;
 
@@ -33,37 +34,6 @@ int main() {
     cout << "With density of 50%: (dg)" << endl;
     cout << dg << endl;
 
-/* tbg
-
-    // Copy dg using the copy constructor and print 'dgc'.
-    Graph dgc { dg };
-    cout << "dgc size = " << dgc.size() << endl;
-    cout << "Print: (dgc)" << endl;
-    cout << dgc << endl;
-      cout << "Pause for randomness ... "s;
-      cin >> input;
-
-      dg.create_density(0.25);
-      cout << "With density of 25%: (dg)" << endl;
-      cout << dg << endl;
-        cout << "Print: (dgc)" << endl;
-        cout << dgc << endl;
-
-    // Assign dg using the copy assignment and print 'dgc2'.
-    Graph dgc2;
-    dgc2 = dgc;
-      cout << "Pause for randomness ... "s;
-      cin >> input;
-      dgc.create_density(0.15);
-    cout << "dgc2 size = " << dgc2.size() << endl;
-    cout << "Print: (dgc2)" << endl;
-    cout << dgc2 << endl;
-      cout << "With density of 15%: (dgc)" << endl;
-      cout << dgc << endl;
-        cout << "Print: (dgc2)" << endl;
-        cout << dgc2 << endl;
-tbg */
-
     // Create an open & a closed 'list' for implementing
     //  Dijkstra's algorithm.
     //
@@ -72,11 +42,11 @@ tbg */
 
     // Ask the user to enter a start node.
     cout << "Please enter a starting node: "s;
-    cin >> start_node;
+    cin >> cur_node;
 
-    // Make sure the user entered a start_node that's in the graph.
-    if (!dg.contains(start_node)) {
-        cout << "The start node entered is not in the graph: "s << start_node << endl;
+    // Make sure the user entered a cur_node that's in the graph.
+    if (!dg.contains(cur_node)) {
+        cout << "The start node entered is not in the graph: "s << cur_node << endl;
         return 1;
     }
 
@@ -90,80 +60,81 @@ tbg */
         return 1;
     }
 
-    // Add the start_node to the 'closed' list.
+    // Add the cur_node to the 'closed' list.
     //
-    closed.insert( {start_node, {start_node, start_node, 0}} );
+    closed.insert( {cur_node, {cur_node, cur_node, 0}} );
 
-    // Get the nodes/costs reachable from the start_node.
-    unique_ptr< vector<reachable_node> > rn = dg.get_reachable_nodes (start_node);
+    // Get the nodes/costs reachable from the cur_node.
+    unique_ptr< vector<reachable_node> > rn = dg.get_reachable_nodes (cur_node);
 
-    // Add nodes reachable from the start_node to the 'open list'
+    // Add nodes reachable from the cur_node to the 'open list'
     // if they are not already in the 'closed list'.
     //
     for (auto& [name, cost] : *rn) {
             cout << "name: " << name << ", cost: " << cost << endl; // tbg
         if (!closed.contains(name)) {
-            open.push_back( {start_node, name, cost} );
+            cout << "    put on open list: name: " << name << ", cost: " << cost << endl; // tbg
+            open.push_back( {cur_node, name, cost} );
         }
     }
 
-    for (auto& [from, node, cost] : open) {
-        cout << "from: " << from << ", to node: " << node << ", cost: " << cost << endl;
-    }
+    cout << endl; // tbg
 
-    sort (open.begin(), open.end());
-
-    cout << "   after sort():" << endl;
-    for (auto& [from, node, cost] : open) {
-        cout << "from: " << from << ", to node: " << node << ", cost: " << cost << endl;
-    }
-
-    // Use a lambda expression to sort 'open' in desending order
+    // Use a lambda expression to sort the 'open' list in desending order
     //
     sort (open.begin(), open.end(), [](traverse_info& a, traverse_info& b) {
-        return a.accum_cost > b.accum_cost;
+        return a.total_cost > b.total_cost;
     });
 
-    cout << "   after lambda expression sort():" << endl;
-    for (auto& [from, node, cost] : open) {
-        cout << "from: " << from << ", to node: " << node << ", cost: " << cost << endl;
+    while (!closed.contains(end_node) && !open.empty()) {
+
+        // Get the next node that has the smallest total cost.
+        traverse_info next_node = open.back();
+        open.pop_back();
+
+        // Add this 'next' node to the closed list. Determine what
+        // nodes are reachable from this 'next' node and add them to
+        // the open list.  Continue checking to see if the end_node
+        // has been added to the closed list.
+        //
+        closed.insert( {next_node.node_id, {next_node.from_node,
+                                            next_node.node_id,
+                                            next_node.total_cost + closed.at(next_node.from_node).total_cost}} );
+
+        // Get the nodes/costs reachable from this next_node.
+        unique_ptr< vector<reachable_node> > rn = dg.get_reachable_nodes (next_node.node_id);
+
+        // Add nodes reachable from this next_node to the 'open list'
+        // if they are not already in the 'closed list'.
+        //
+        for (auto& [name, cost] : *rn) {
+                cout << "name: " << name << ", cost: " << cost << endl; // tbg
+            if (!closed.contains(name)) {
+                cout << "    put on open list: name: " << name << ", cost: " << cost << endl; // tbg
+                open.push_back( {next_node.node_id, name, cost} );
+            }
+        }
+
+    cout << endl; // tbg
+
+        // Use a lambda expression to sort the 'open' list in desending order
+        //
+        sort (open.begin(), open.end(), [](traverse_info& a, traverse_info& b) {
+            return a.total_cost > b.total_cost;
+        });
     }
 
-
-    // Get the last element
-    //
-    traverse_info ti = open.back();
-    cout << "The last element:" << endl;
-    cout << "   from: " << ti.from_node << endl;
-    cout << "   node: " << ti.node << endl;
-    cout << "   cost: " << ti.accum_cost << endl;
-
-    // Remove the last element
-    //
-    open.pop_back();
-
-    // Get the last element
-    //
-    ti = open.back();
-    cout << "The last element:" << endl;
-    cout << "   from: " << ti.from_node << endl;
-    cout << "   node: " << ti.node << endl;
-    cout << "   cost: " << ti.accum_cost << endl;
-
-    // Remove the last element
-    //
-    open.pop_back();
-
-    // Get the last element
-    //
-    ti = open.back();
-    cout << "The last element:" << endl;
-    cout << "   from: " << ti.from_node << endl;
-    cout << "   node: " << ti.node << endl;
-    cout << "   cost: " << ti.accum_cost << endl;
-
-    // Remove the last element
-    //
-    open.pop_back();
+    if (closed.contains(end_node)) {
+        cout << "Path found with cost: "s << closed.at(end_node).total_cost << endl;
+        string node = end_node;
+        cout << closed.at(node).node_id << " - "s << closed.at(node).total_cost << endl;
+        while (closed.at(node).node_id != closed.at(node).from_node) {
+            cout << closed.at(node).from_node << " - "s << closed.at(node).total_cost << endl;
+            node = closed.at(node).from_node;
+        }
+    }
+    else {
+        cout << "No path found"s << endl;
+    }
 
 }
