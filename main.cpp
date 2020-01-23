@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 struct traverse_info {
     string  from_node;
     string  node_id;
@@ -21,8 +22,8 @@ int main() {
 
     string cur_node, end_node;
 
-    // tbg Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
-    Graph dg { "a", "b", "c", "d", "e" };
+    Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
+    // tbg Graph dg { "a", "b", "c", "d", "e" };
 
     cout << "dg size = " << dg.size() << endl;
 
@@ -111,7 +112,6 @@ int main() {
         string node = end_node;
         cout << closed.at(node).node_id << " - "s << closed.at(node).total_cost << endl;
         while (closed.at(node).node_id != closed.at(node).from_node) {
-            // tbg cout << closed.at(node).from_node << " - "s << closed.at(node).total_cost << endl;
             string from_node = closed.at(node).from_node;
             cout << from_node << " - "s << closed.at(from_node).total_cost << endl;
             node = closed.at(node).from_node;
