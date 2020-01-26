@@ -73,7 +73,7 @@ int main() {
 
         // Get the nodes/costs reachable from the cur_node.
         //
-        unique_ptr< vector<reachable_node> > rn = dg.get_reachable_nodes (cur_node);
+        unique_ptr< vector<Graph::reachable_node> > rn = dg.get_reachable_nodes (cur_node);
 
         // Add nodes reachable from the cur_node to the 'open list' if
         // they are not already in the 'closed list'.

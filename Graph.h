@@ -12,15 +12,6 @@ using namespace std;
 constexpr double DEFAULT_DENSITY { 0.20 };
 constexpr int    DEFAULT_MAX_WGT { 10 };
 
-// Information about a reachable node. There is a directed
-// edge from a node to the node named in this structure. The
-// 'cost' of traversing to this named node is 'cost_to_node'.
-//
-struct reachable_node {
-    string  node_name;
-    int     cost_to_node;
-};
-
 // A class that respresents a graph. This class contains a
 // graph's nodes. A call to create_density() creates a random
 // number of directed edges. Each edge has a random weight/cost
@@ -40,11 +31,21 @@ class Graph {
                              const int    max_weight    = DEFAULT_MAX_WGT);
         unsigned int size() const;
         string to_string() const;
-        unique_ptr< vector<reachable_node> > get_reachable_nodes (const string&) const;
         bool contains(const string&) const;
+
+        // Information about a reachable node. There is a directed
+        // edge from a node to the node stored in this structure.
+        // The 'cost' of traversing to this node is 'cost_to_node'.
+        //
+        struct reachable_node {
+            string  node;
+            int     cost_to_node;
+        };
+
+        unique_ptr< vector<reachable_node> > get_reachable_nodes (const string&) const;
     private:
         unordered_map <string, unordered_map<string, int>* > *graph;
-        const vector<string>                                 *node_names;
+        const vector<string>                                 *nodes;
         unsigned int                                          num_nodes;
 };
 

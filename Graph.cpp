@@ -10,7 +10,7 @@ using namespace std;
 
 Graph::Graph ()
     :graph { new unordered_map <string, unordered_map<string, int>* > },
-     node_names { new vector <string> },
+     nodes { new vector <string> },
      num_nodes { 0 }
 {
 }
@@ -18,13 +18,13 @@ Graph::Graph ()
 
 Graph::Graph (const initializer_list <string>& lst)
     :graph { new unordered_map <string, unordered_map<string, int>* > },
-     node_names { new vector <string> {lst} }
+     nodes { new vector <string> {lst} }
 {
-    // Add the node names (lst) to this graph. Create and associate
-    // an empty map for each node before inserting into the graph.
+    // Add the nodes (lst) to this graph. Create and associate an
+    // empty map for each node before inserting into the graph.
     //
-    for (const auto& node_name : lst) {
-        graph->insert (make_pair (node_name, new unordered_map<string, int>));
+    for (const auto& node : lst) {
+        graph->insert (make_pair (node, new unordered_map<string, int>));
     }
 
     // Set how many nodes are in this graph.
@@ -34,22 +34,22 @@ Graph::Graph (const initializer_list <string>& lst)
 
 Graph::Graph (const Graph& copyGraph)
     :graph { new unordered_map <string, unordered_map<string, int>* > },
-     node_names { new vector <string> { *(copyGraph.node_names) } },
+     nodes { new vector <string> { *(copyGraph.nodes) } },
      num_nodes { copyGraph.num_nodes }
 {
-    for (const auto& [node_name, edges] : *(copyGraph.graph)) {
-        graph->insert (make_pair ( node_name, new unordered_map<string, int> { *edges } ));
+    for (const auto& [node, edges] : *(copyGraph.graph)) {
+        graph->insert (make_pair ( node, new unordered_map<string, int> { *edges } ));
     }
 }
 
 
 Graph::Graph (Graph&& moveGraph)
     :graph { moveGraph.graph },
-     node_names { moveGraph.node_names },
+     nodes { moveGraph.nodes },
      num_nodes { moveGraph.num_nodes }
 {
     moveGraph.graph = new unordered_map <string, unordered_map<string, int>* >;
-    moveGraph.node_names = new vector <string>;
+    moveGraph.nodes = new vector <string>;
     moveGraph.num_nodes = 0;
 }
 
@@ -63,16 +63,16 @@ Graph& Graph::operator= (const Graph& copyGraph)
         delete edges;
     }
     delete graph;
-    delete node_names;
+    delete nodes;
 
     // Assign the 'new' values from copyGraph to this Graph.
     //
     graph = new unordered_map <string, unordered_map<string, int>* >;
-    node_names = new vector <string> { *(copyGraph.node_names) };
+    nodes = new vector <string> { *(copyGraph.nodes) };
     num_nodes = copyGraph.num_nodes;
 
-    for (const auto& [node_name, edges] : *(copyGraph.graph)) {
-        graph->insert (make_pair ( node_name, new unordered_map<string, int> { *edges } ));
+    for (const auto& [node, edges] : *(copyGraph.graph)) {
+        graph->insert (make_pair ( node, new unordered_map<string, int> { *edges } ));
     }
 
     // Return this Graph.
@@ -90,16 +90,16 @@ Graph& Graph::operator= (Graph&& moveGraph)
         delete edges;
     }
     delete graph;
-    delete node_names;
+    delete nodes;
 
     // Assign the 'new' values from moveGraph to this Graph.
     //
     graph = moveGraph.graph;
-    node_names = moveGraph.node_names;
+    nodes = moveGraph.nodes;
     num_nodes = moveGraph.num_nodes;
 
     moveGraph.graph = new unordered_map <string, unordered_map<string, int>* >;
-    moveGraph.node_names = new vector <string>;
+    moveGraph.nodes = new vector <string>;
     moveGraph.num_nodes = 0;
 
     // Return this Graph.
@@ -111,7 +111,7 @@ Graph& Graph::operator= (Graph&& moveGraph)
 Graph::~Graph ()
 {
     // Free the memory associated with the vector.
-    delete node_names;
+    delete nodes;
 
     // Free the memory for each value (edges) associated with each key (node).
     for (auto& [node, edges] : *graph) {
@@ -160,9 +160,9 @@ void Graph::create_density (const double graph_density,
         // Check for loops.
         if (from_idx == to_idx) continue;
 
-        // Get the strings associated with the two nodes.
-        string from_node = node_names->at(from_idx),
-                 to_node = node_names->at(to_idx);
+        // 'Get' the two nodes.
+        string from_node = nodes->at(from_idx),
+                 to_node = nodes->at(to_idx);
 
         // Check that the 'from_node' doesn't already
         // have an edge to the 'to_node.
@@ -189,9 +189,9 @@ unsigned int Graph::size() const
 
 // Indicate whether this Graph contain a given node.
 //
-bool Graph::contains (const string& node_name) const
+bool Graph::contains (const string& node) const
 {
-    return graph->contains(node_name);
+    return graph->contains(node);
 }
 
 
@@ -211,21 +211,20 @@ string Graph::to_string() const
 }
 
 
-// Given a node name that's in this graph, return a pointer to a vector that contains
-// all the nodes that are reachable from this given node along with the cost associated
+// Given a node that's in this graph, return a pointer to a vector that contains all
+// the nodes that are reachable from this given node along with the cost associated
 // with traversal to a reachable node.
 //
-unique_ptr< vector<reachable_node> > Graph::get_reachable_nodes (const string& node_name) const
+unique_ptr< vector<Graph::reachable_node> > Graph::get_reachable_nodes (const string& node) const
 {
-    unique_ptr< vector<reachable_node> > vec { new vector<reachable_node> };
+    unique_ptr< vector<Graph::reachable_node> > vec { new vector<Graph::reachable_node> };
 
-    // If the named node is in this graph, add all its 
-    // reachable nodes and the cost of traversal to that
-    // node.
+    // If the node is in this graph, add all its reachable
+    // nodes and the cost of traversal to that node.
     //
-    if (graph->contains(node_name)) {
-        for (auto& [name, cost] : *graph->at(node_name)) {
-            vec->push_back( {name, cost} );
+    if (graph->contains(node)) {
+        for (auto& [to_node, cost] : *graph->at(node)) {
+            vec->push_back( {to_node, cost} );
         }
     }
 
