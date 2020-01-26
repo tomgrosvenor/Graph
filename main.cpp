@@ -22,10 +22,10 @@ int main() {
 
     string cur_node, end_node;
 
-    Graph dg { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p" };
-    // tbg Graph dg { "a", "b", "c", "d", "e" };
+    Graph dg { "a"s, "b"s, "c"s, "d"s, "e"s, "f"s, "g"s, "h"s, "i"s, "j"s, "k"s, "l"s, "m"s, "n"s, "o"s, "p"s };
+    // tbg Graph dg { "a"s, "b"s, "c"s, "d"s, "e"s };
 
-    cout << "dg size = " << dg.size() << endl;
+    cout << "dg size = "s << dg.size() << endl;
 
     // Create random edges & weights for 'dg'.
     //
@@ -33,7 +33,7 @@ int main() {
 
     // Print 'dg'.
     //
-    cout << "With density of 50%: (dg)" << endl;
+    cout << "With density of 50%: (dg)"s << endl;
     cout << dg << endl;
 
     // Create an open & a closed 'list' for implementing
