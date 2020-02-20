@@ -215,9 +215,9 @@ string Graph::to_string() const
 // the nodes that are reachable from this given node along with the cost associated
 // with traversal to a reachable node.
 //
-unique_ptr< vector<Graph::reachable_node> > Graph::get_reachable_nodes (const string& node) const
+unique_ptr <vector <Graph::reachable_node> > Graph::get_reachable_nodes (const string& node) const
 {
-    unique_ptr< vector<Graph::reachable_node> > vec { new vector<Graph::reachable_node> };
+    unique_ptr <vector <Graph::reachable_node> > vec { new vector<Graph::reachable_node> };
 
     // If the node is in this graph, add all its reachable
     // nodes and the cost of traversal to that node.

@@ -42,7 +42,7 @@ class Graph {
             int     cost_to_node;
         };
 
-        unique_ptr< vector<reachable_node> > get_reachable_nodes (const string&) const;
+        unique_ptr <vector <reachable_node> > get_reachable_nodes (const string&) const;
     private:
         unordered_map <string, unordered_map<string, int>* > *graph;
         const vector<string>                                 *nodes;
