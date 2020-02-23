@@ -44,9 +44,9 @@ class Graph {
 
         unique_ptr <vector <reachable_node> > get_reachable_nodes (const string&) const;
     private:
-        unordered_map <string, unordered_map<string, int>* > *graph;
-        const vector<string>                                 *nodes;
-        unsigned int                                          num_nodes;
+        unordered_map <string, unordered_map <string, int>* > *graph;
+        const vector <string>                                 *nodes;
+        unsigned int                                           num_nodes;
 };
 
 // Overload the output operatator for the Graph class.
